@@ -23,38 +23,47 @@ class DA:
     #第二步遍历文件列表,将打开所有文件,遍历文件下所有的sheet获取所有数据,如果数据已经存在则过滤
     def GetDemandData(self,DemandFileNameList):
         data_list = []
+
         global path
         global i
+        global flagsDict
         for i,path in enumerate(DemandFileNameList,1):
+            fliename=str(path).split("\\")[-1]
 
             # try:
-                bk = xlrd.open_workbook(path)
-                # 根据需求文档需要过滤掉"代码（业务类型）","索引页"
-                for name in bk.sheet_names():
-                    try:
-                        if name!=('代码（业务类型）') and(name!= '索引页') :
-                            sheet=bk.sheet_by_name(name)
-                            row_num = sheet.nrows
-                            for a in range(1, row_num):
-                                row_data = sheet.row_values(a)
-                                data = {}
-                                for index, key in enumerate(sheet.row_values(0),0):
-                                    data[key] = row_data[index]
+            bk = xlrd.open_workbook(path)
+            # 根据需求文档需要过滤掉"代码（业务类型）","索引页"
+            for name in bk.sheet_names():
+                try:
+                    if name =="信息项":
+                        flagsDict={"flags":fliename}
+                    else:
+                        flagsDict={"flags":name}
+                    if name!=('代码（业务类型）') and(name!= '索引页') :
+                        sheet=bk.sheet_by_name(name)
+                        row_num = sheet.nrows
+                        for a in range(1, row_num):
+                            row_data = sheet.row_values(a)
+                            data = {}
+                            for index, key in enumerate(sheet.row_values(0),0):
+                                data[key] = row_data[index]
 
-                                #
-                                ZDZT=data.get("修改类别")
-                                XGSJ=data.get("修改时间")
-                                ZD=data.get("数据库字段中文名")
-                                if data not in data_list and    ((ZDZT!="删")and( not re.search("删",str(XGSJ)))and(
-                                    ZD!=""
-                                )) : #过滤相同字段，删除修改类别是删除的字段
-                                    data_list.append(data)
-                    except Exception as e:
-                        print("获取"+path+"失败"+",以下是失败信息" + "\n")
-                        print(e)
-                        exit()
+                            #
+                            ZDZT=data.get("修改类别")
+                            XGSJ=data.get("修改时间")
+                            ZD=data.get("数据库字段中文名")
+                            if data not in data_list and    ((ZDZT!="删")and( not re.search("删",str(XGSJ)))and(
+                                ZD!=""
+                            )) : #过滤相同字段，删除修改类别是删除的字段
+                                data.update(flagsDict)
+                                data_list.append(data)
+                except Exception as e:
+                    print("获取"+path+"失败"+",以下是失败信息" + "\n")
+                    print(e)
+                    exit()
 
         print("获取需求数据成功!开始进行下一步,请小主喝杯咖啡继续等待...")
+        print(data_list)
         return data_list
    # 循环数据list 获取想要的数据
     def GetGoalFeild(self,data_list):
@@ -70,7 +79,8 @@ class DA:
                 CD=item.get("长度")
                 KXX=item.get("可选项")
                 JD=item.get("")
-                GoalDict.update({"ZD":ZD,"LX":LX,"CD":CD,"KXX":KXX,"JD":JD})
+                flags=item.get("flags")
+                GoalDict.update({"ZD":ZD,"LX":LX,"CD":CD,"KXX":KXX,"JD":JD,"flags":flags})
                 GoalList.append(GoalDict)
             except Exception as  e:
                 print("获取"+ZD+"数据失败,以下是失败信息"+"\n")

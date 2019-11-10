@@ -1,4 +1,5 @@
 import xlrd
+from T3C_F_Method import Method
 class SMD_Analysis:
     def GetSMDDate(self,path,sheet_name):
 
@@ -12,7 +13,10 @@ class SMD_Analysis:
                 data = {}
                 for index, key in enumerate(sh.row_values(1)):
                     data[key] = row_data[index]
-                data_list.append(data)
+                sfbfwxq=data.get("是否本服务需求")
+                print(sfbfwxq)
+                if data["是否本服务需求"]=="是":
+                    data_list.append(data)
         except Exception as e:
             print("获取SMD数据失败!失败信息如下"+"\n")
             print(e)
@@ -22,6 +26,7 @@ class SMD_Analysis:
         SMDGoalData=[]
         try:
             for i,item in enumerate(data_list,1):
+                DB=item.get("表名")
                 ZD=item.get("字段中文名")
                 LX=item.get("数据类型")
                 CD=str(item.get("数据长度")).split(".")[0]
@@ -30,7 +35,7 @@ class SMD_Analysis:
                 SMing=item.get("说明")
                 BWK=item.get("不为空")
                 SMDdict={}
-                SMDdict.update({"ZD":ZD,"LX":LX,"CD":CD,"JD":JD,"DM":DM,"SMing":SMing,"BWK":BWK})
+                SMDdict.update({"DB":DB,"ZD":ZD,"LX":LX,"CD":CD,"JD":JD,"DM":DM,"SMing":SMing,"BWK":BWK})
                 SMDGoalData.append(SMDdict)
         except Exception as e:
             print("获取SMD目标数据失败,失败信息如下"+"\n")
@@ -47,24 +52,10 @@ class SMD_Analysis:
             print(e)
         print("SMD目标字段获取完成!开始进行下一步,请小主喝杯咖啡继续等待......")
         return SMDGoalData
-    def CompareZD(self,DemandData,SMDData):
-        DemandZD_List=[x.get("ZD") for x in DemandData if (x.get("ZD")!="")]
-        SMDZD_List=[x.get("ZD") for x in SMDData if x.get("ZD")!=""]
-        SMDLIst=[]
-        DemandList=[]
-        CmopareResult={}
-        try:
-            for item in DemandZD_List:
-                if item not in SMDZD_List:
-                    DemandList.append(item)
-            for items in SMDZD_List:
-                if items not in DemandZD_List:
-                    SMDLIst.append(items)
-        except Exception as e:
-            print("字段情况对比失败,以下是失败信息"+"\n")
-            print(e)
-        CmopareResult.update({"S_SMD":DemandList,"S_Demand":SMDLIst})
-        return CmopareResult
+
+
+
+
 
 
 
