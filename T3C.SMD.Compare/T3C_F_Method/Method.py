@@ -48,13 +48,20 @@ class Method:
                 ZDlist.append(ZD)
         return Result
     #将两次结果合并
-    def ResultHB(self,Demand,SMD):
-        Result_SMD=dict(SMD).get("Del")
-        Result_Demand=dict(Demand).get("Del")
+    def ResultHB(self,Demand,SMD,key):
+        Result_SMD=dict(SMD).get(key)
+        Result_Demand=dict(Demand).get(key)
         Result={"S_SMD":Result_Demand,"S_Demand":Result_SMD}
         return Result
     #根据传过来的ZD和其他属性判断是否相同
-    # def PDQT(self,ZD:
+    def PDQT(self,FeildName_Demand,FeildName_SMD):
+        global CompareResult
+        if FeildName_Demand==FeildName_SMD:
+            CompareResult="结果一致"
+        else:
+            CompareResult="结果不一致"
+
+        return CompareResult
     # def CompareZD(self,DemandData,SMDData):
     #     ResultSMD=Method.Method().QC(SMDData)
     #     ResultDemand=Method.Method().QC(DemandData)

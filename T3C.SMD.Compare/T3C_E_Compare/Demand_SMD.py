@@ -60,6 +60,8 @@ class Compare:
         SNDDict = {"Del": DelList, "Com": CommentList}
         return SNDDict
 
+    def GetCommentData(self,):
+
     #写成需要的格式输出文件
 
     # 比较后将比较完的不同的字段从两个列表中删除

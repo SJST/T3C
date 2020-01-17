@@ -34,8 +34,9 @@ class SMD_Analysis:
                 DM=str(item.get("代码类型")).split(".")[0]
                 SMing=item.get("说明")
                 BWK=item.get("不为空")
+                flags=item.get("flags")
                 SMDdict={}
-                SMDdict.update({"DB":DB,"ZD":ZD,"LX":LX,"CD":CD,"JD":JD,"DM":DM,"SMing":SMing,"BWK":BWK})
+                SMDdict.update({"DB":DB,"ZD":ZD,"LX":LX,"CD":CD,"JD":JD,"DM":DM,"SMing":SMing,"BWK":BWK,"flags":flags})
                 SMDGoalData.append(SMDdict)
         except Exception as e:
             print("获取SMD目标数据失败,失败信息如下"+"\n")

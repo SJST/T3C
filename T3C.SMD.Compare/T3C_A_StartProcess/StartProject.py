@@ -1,4 +1,5 @@
 '''StartProcess'''
+
 from T3C_F_Method import Method
 from T3C_B_Demand import Demand_Analysis
 from T3C_C_SMD import SMD_Analysis
@@ -33,11 +34,12 @@ if __name__ == '__main__':
     DiffZD=Demand_SMD.Compare().SMD_Demand_ZD_Compare(ChangeLXDemandData,SMDDataCL)
     SMDLess=Demand_SMD.Compare().SMDLess(QC_Demand,DiffZD)
     DemandLess=Demand_SMD.Compare().DemandLess(QC_SMD,DiffZD)
-    HB_Result=Method.Method().ResultHB(SMDLess,DemandLess)
+    HB_Result=Method.Method().ResultHB(SMDLess,DemandLess,"Del")
     TitleDemand="这是Demand里面有的,SMD里没有的"+"\n"
     TitleSMD = "这是SMD里面有的,Demand里没有的" + "\n"
     Name="Diff_ZD"
     W=WriteSMD_Demand.Write_SMD_Demand().WriteDiffZD(DirCreate,LocationTime,TitleDemand,Name,TitleSMD,HB_Result)
+
 
 
 
